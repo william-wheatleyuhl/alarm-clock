@@ -24,11 +24,12 @@ public class ClockDisplay
 {
     private NumberDisplay hours;
     private NumberDisplay minutes;
+    private NumberDisplay alarmHour;
+    private NumberDisplay alarmMinute;
     private String displayString;    // simulates the actual display
     private boolean alarmOn = false;
-    private int alarmHour;
-    private int alarmMinute;
-    
+    private boolean alarmIsRinging = false;
+
     /**
      * Constructor for ClockDisplay objects. This constructor 
      * creates a new clock set at 00:00.
@@ -37,6 +38,8 @@ public class ClockDisplay
     {
         hours = new NumberDisplay(24);
         minutes = new NumberDisplay(60);
+        alarmHour = new NumberDisplay(24);
+        alarmMinute = new NumberDisplay(60);
         updateDisplay();
     }
 
@@ -52,6 +55,8 @@ public class ClockDisplay
     {
         hours = new NumberDisplay(24);
         minutes = new NumberDisplay(60);
+        alarmHour = new NumberDisplay(24);
+        alarmMinute = new NumberDisplay(60);
         setTime(hour, minute);
     }
 
@@ -66,6 +71,7 @@ public class ClockDisplay
             hours.increment();
         }
         updateDisplay();
+        ringAlarm();
     }
 
     /**
@@ -87,6 +93,24 @@ public class ClockDisplay
         updateDisplay();
     }
 
+    /**
+     * Set the time of the Alarm to the specified hour and
+     * minute. Check that they are valid time values.
+     * 
+     * @param hour Integer value for Hour
+     * @param minute Integer value for Minute
+     */
+    public void setAlarm(int hour, int minute)
+    {
+        if(hour >= 0 && hour <= 23) {
+            alarmHour.setValue(hour);
+        }
+        
+        if(minute >= 0 && minute <= 59) {
+            alarmMinute.setValue(minute);
+        }
+    }
+    
     /**
      * Return the current time of this display in the format HH:MM.
      * 
@@ -129,7 +153,6 @@ public class ClockDisplay
         }
         
         displayString = displayTwoDigits + numericHour + ":" + minutes.getDisplayValue() + displayAmOrPm;
-        alarm();
     }
     
     /**
@@ -141,8 +164,7 @@ public class ClockDisplay
     public void turnAlarmOn(int hour, int minute)
     {
         alarmOn = true;
-        alarmHour = hour;
-        alarmMinute = minute;
+        setAlarm(hour, minute);
     }
     
     /**
@@ -151,19 +173,45 @@ public class ClockDisplay
     public void turnAlarmOff()
     {
         alarmOn = false;
+        alarmIsRinging = false;
+    }
+    
+    /**
+     * Advance the alarm time by one minute.
+     */
+    public void alarmTimeTick()
+    {
+        alarmMinute.increment();
+        if(alarmMinute.getValue() == 0) {  // it just rolled over!
+            alarmHour.increment();
+        }
     }
     
     /**
      * If the Set Alarm Time is reached and the Alarm is On, Print the Alarm
      */
-    public void alarm(){
+    public void ringAlarm(){
         if(alarmOn){
-            if(hours.getValue() == alarmHour && minutes.getValue() == alarmMinute) {
+            if(hours.getValue() == alarmHour.getValue() && minutes.getValue() == alarmMinute.getValue()) {
                 System.out.println("************************");
                 System.out.println("  ALARM! ALARM! ALARM!");
                 System.out.println("  The Time is: " + displayString);
                 System.out.println("************************");
+                alarmIsRinging = true;
             }
+        }
+    }
+    
+    /**
+     * A snooze function for the alarm, if the alarm is ringing, snooze advances
+     * alarm time by 15 minutes.
+     */
+    public void alarmSnooze() {
+        if(alarmIsRinging) {
+            for(int x = 0; x < 15; x++) {
+                alarmTimeTick();
+            }
+            alarmIsRinging = false;
         }
     }
 }

@@ -2,6 +2,7 @@
 
 # BlueJ files
 *.ctxt
+*.bluej
 doc/
 
 # IntelliJ files
