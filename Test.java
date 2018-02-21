@@ -24,5 +24,13 @@ public class Test
             clock.timeTick();
             System.out.println(clock.getTime());
         }
+        
+        clock.alarmSnooze();
+        System.out.println("I Snoozed the Alarm");
+        
+        for(int x = 0; x < 15; x++) {
+            clock.timeTick();
+            System.out.println(clock.getTime());
+        }
     }
 }

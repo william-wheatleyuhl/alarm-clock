@@ -12,13 +12,17 @@
  * Modifications:
  * WWU: Added Logic to updateDisplay() to determine "AM" or "PM"
  * WWU: Added Logic to updateDisplay() to display time in 12-hour format
- * WWU: Added turnAlarmOn(), turnAlarmOff(), and alarm()
- * WWU: Added Logic to alarm() to only print alarm text if alarmOn == true
+ * WWU: Added turnAlarmOn(), turnAlarmOff(), and ringAlarm()
+ * WWU: Added Logic to ringAlarm() to only print alarm text if alarmOn == true
  * WWU: Added validation to setTime()
+ * WWU: Changed alarm Hour/Minute Fields to NumberDisplay objects
+ * WWU: Added setAlarmTime 
+ * WWU: Added increment method for the alarm
+ * WWU: Added Snooze Method for the Alarm
  * 
  * 
  * @author Michael Kölling and David J. Barnes and William Wheatley-Uhl
- * @version 2018.02.10
+ * @version 2018.02.18
  */
 public class ClockDisplay
 {
@@ -94,24 +98,6 @@ public class ClockDisplay
     }
 
     /**
-     * Set the time of the Alarm to the specified hour and
-     * minute. Check that they are valid time values.
-     * 
-     * @param hour Integer value for Hour
-     * @param minute Integer value for Minute
-     */
-    public void setAlarm(int hour, int minute)
-    {
-        if(hour >= 0 && hour <= 23) {
-            alarmHour.setValue(hour);
-        }
-        
-        if(minute >= 0 && minute <= 59) {
-            alarmMinute.setValue(minute);
-        }
-    }
-    
-    /**
      * Return the current time of this display in the format HH:MM.
      * 
      * @return displayString
@@ -122,7 +108,8 @@ public class ClockDisplay
     }
     
     /**
-     * Determines Am or Pm, converts 24 hour values into 12 hour values, and maintains 4 digit display format.
+     * Determines Am or Pm, converts 24 hour values into 12 hour values, 
+     * and maintains 4 digit display format.
      */
     private void updateDisplay()
     {
@@ -156,6 +143,24 @@ public class ClockDisplay
     }
     
     /**
+     * Set the time of the Alarm to the specified hour and
+     * minute. Check that they are valid time values.
+     * 
+     * @param hour Integer value for Hour
+     * @param minute Integer value for Minute
+     */
+    public void setAlarmTime(int hour, int minute)
+    {
+        if(hour >= 0 && hour <= 23) {
+            alarmHour.setValue(hour);
+        }
+        
+        if(minute >= 0 && minute <= 59) {
+            alarmMinute.setValue(minute);
+        }
+    }
+    
+    /**
      * Turns Alarm on and Sets Alarm to Given Time
      * 
      * @param hour Integer value for Alarm Hour (0 - 23)
@@ -164,7 +169,7 @@ public class ClockDisplay
     public void turnAlarmOn(int hour, int minute)
     {
         alarmOn = true;
-        setAlarm(hour, minute);
+        setAlarmTime(hour, minute);
     }
     
     /**
